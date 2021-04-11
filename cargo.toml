@@ -1,0 +1,6 @@
+[package]
+name = "philosoph-rs"
+version = "0.0.1"
+
+[dependencies]
+clap = "~2.27.0"
