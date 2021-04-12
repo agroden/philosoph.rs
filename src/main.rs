@@ -8,8 +8,7 @@ use std::env;
 use clap::{Arg,App};
 
 
-fn philosopher(id: u8, cycles: Option<u8>) {
-	let c = cycles.unwrap_or(0)
+fn philosopher(id: u8, cycles: u8) {
 	println!("id: {}, name: {}, cycles: {}", id, thread::current().name().unwrap(), cycles);
 	// alternate think and eat
 
@@ -43,7 +42,7 @@ fn main() {
 			.validator(|x| valid_u8(x, None))
 		).get_matches();
 	let total_philosophers = value_t!(args, "PHILOSOPHERS", u8).unwrap();
-	let cycles = value_t!(args, "cycles", u8);
+	let cycles = value_t!(args, "cycles", u8).unwrap_or(0);
 
 
 	// create philosophers
