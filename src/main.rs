@@ -2,16 +2,29 @@
 
 // clap for command line argument processing
 extern crate clap;
+extern crate rand;
 
-use std::thread;
-use std::env;
+use std::{env, thread, time};
 use clap::{Arg,App};
 
 
 fn philosopher(id: u8, cycles: u8) {
 	println!("id: {}, name: {}, cycles: {}", id, thread::current().name().unwrap(), cycles);
 	// alternate think and eat
+	let mut sentinel = cycles;
+	while sentinel > 0 {
+		// request forks
+		let eat_time: u8 = rand::random();
+		println!("eating for {} seconds", eat_time);
+		thread::sleep(time::Duration::from_secs(eat_time.into()));
 
+		// mark forks as dirty
+		let think_time: u8 = rand::random();
+		println!("thinking for {} seconds", think_time);
+		thread::sleep(time::Duration::from_secs(think_time.into()));
+
+		sentinel -= 1;
+	}
 }
 
 
@@ -39,11 +52,11 @@ fn main() {
 		)
 		.arg(Arg::with_name("cycles")
 			.help("The number of cycles of thinking and eating a philosopher will do before leaving")
+			.default_value("0")
 			.validator(|x| valid_u8(x, None))
 		).get_matches();
 	let total_philosophers = value_t!(args, "PHILOSOPHERS", u8).unwrap();
-	let cycles = value_t!(args, "cycles", u8).unwrap_or(0);
-
+	let cycles = value_t!(args, "cycles", u8).unwrap();
 
 	// create philosophers
 	let mut philosophers = Vec::new();
